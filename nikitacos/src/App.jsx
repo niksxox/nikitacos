@@ -44,7 +44,7 @@ export default function NikiTacosPortfolioIntro() {
       } else {
         clearInterval(typing);
       }
-    }, 40);
+    }, 80);
 
     return () => clearInterval(typing);
   }, [showDialogue]);
