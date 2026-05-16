@@ -384,16 +384,18 @@ body{
 .taskbar{
   position:absolute;
 
-  left:0;
-  bottom:0;
+  bottom:-2px;
 
-  width:100%;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  width:92%;
 
   z-index:50;
 
   image-rendering:pixelated;
 }
-
 /* responsive */
 
 @media(max-width:900px){
