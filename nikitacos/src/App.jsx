@@ -1,189 +1,338 @@
-import Desktop from "./components/Desktop";
-import { useEffect, useState } from "react";
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-export default function NikiTacosPortfolioIntro() {
-  const [screen, setScreen] = useState("loading");
-  const [showDialogue, setShowDialogue] = useState(false);
-  const [typedText, setTypedText] = useState("");
-  const [showDesktop, setShowDesktop] = useState(false);
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-  const dialogue = [
-    "Hey, I'm Nikita 🌸",
-    "The kettle is warm, and lamp is on.",
-    "Feel free to look around ✦",
-  ];
+body{
+  overflow:hidden;
+  font-family:'Press Start 2P', cursive;
+}
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setScreen("intro");
-      setShowDialogue(true);
-    }, 3500);
 
-    return () => clearTimeout(timer);
-  }, []);
+.desktop{
+  width:78%;
+  height:78%;
 
-  useEffect(() => {
-    if (!showDialogue) return;
+  max-width:1400px;
+  max-height:820px;
 
-    let currentLine = 0;
-    let currentChar = 0;
-    let finalText = "";
+  position:absolute;
 
-    const typing = setInterval(() => {
-      if (currentLine < dialogue.length) {
-        const line = dialogue[currentLine];
+  top:50%;
+  left:50%;
 
-        finalText += line[currentChar];
-        setTypedText(finalText);
+  transform:translate(-50%,-50%);
 
-        currentChar++;
+  overflow:hidden;
 
-        if (currentChar >= line.length) {
-          finalText += "\n\n";
-          currentLine++;
-          currentChar = 0;
-        }
-      } else {
-        clearInterval(typing);
-      }
-    }, 80);
+  z-index:100;
 
-    return () => clearInterval(typing);
-  }, [showDialogue]);
+  border:5px solid rgba(255,255,255,0.75);
 
-  return (
-    <main className="h-screen w-screen overflow-hidden bg-black relative font-sans">
+  border-radius:22px;
 
-      {/* LOADING SCREEN */}
-      {screen === "loading" && (
-        <section className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-[#241B35] via-[#544273] to-[#D8B9A5]">
+  background:rgba(0,0,0,0.08);
 
-          <div className="relative z-10 flex flex-col items-center text-center px-6">
-            <div className="bg-[#F8F4EE]/90 border-[6px] border-[#241B35] rounded-[2rem] p-10 md:p-14 shadow-[10px_10px_0px_#241B35] max-w-2xl w-full">
+  backdrop-filter:blur(4px);
 
-              <p className="font-mono uppercase tracking-[0.4em] text-[#6E5D73] text-sm mb-5">
-                initializing portfolio...
-              </p>
+  box-shadow:
+    0 0 60px rgba(0,0,0,0.45),
+    0 0 0 4px rgba(255,255,255,0.08);
 
-              <h1 className="text-5xl md:text-7xl text-[#241B35] font-serif leading-tight mb-6">
-                NikiTacos.exe
-              </h1>
+  animation:desktopOpen 0.35s ease;
+}
 
-              <p className="text-[#5E5367] text-lg leading-relaxed mb-10">
-                Tiny details loading in...
-              </p>
+/* subtle screen glow */
 
-              <div className="w-full h-6 bg-[#D8CFC4] border-[4px] border-[#241B35] rounded-full overflow-hidden">
-                <div className="h-full w-2/3 bg-gradient-to-r from-[#A58AA3] via-[#D6B8FF] to-[#FFD7B8] animate-pulse" />
-              </div>
+.desktop::after{
+  content:"";
 
-            </div>
-          </div>
-        </section>
-      )}
+  position:absolute;
+  inset:0;
 
-      {/* INTRO SCREEN */}
-      {screen === "intro" && (
-        <section className="absolute inset-0 bg-gradient-to-b from-[#2D2145] via-[#56477B] to-[#D7B7A6] flex items-center justify-center px-6">
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.04),
+      rgba(0,0,0,0.08)
+    );
 
-          {/* background glow */}
-          <div className="absolute top-20 left-20 w-64 h-64 bg-[#D9B8FF] opacity-20 blur-3xl rounded-full animate-pulse" />
-          <div className="absolute bottom-20 right-20 w-72 h-72 bg-[#FFD7B8] opacity-20 blur-3xl rounded-full animate-pulse" />
+  pointer-events:none;
+}
 
-          <div className="relative z-10 max-w-6xl w-full grid md:grid-cols-2 gap-14 items-center">
 
-            {/* avatar */}
-            <div className="flex justify-center">
-              <div className="relative bg-[#8D68D1]/70 border-[6px] border-[#F6EFFF] rounded-[2rem] overflow-hidden shadow-[10px_10px_0px_#241B35]">
-                <img
-                  src="/avatar.png"
-                  alt="Nikita Pixel Avatar"
-                  className="w-[380px] md:w-[450px] object-cover"
-                />
-              </div>
-            </div>
+.wallpaper{
+  width:100%;
+  height:100%;
 
-            {/* dialogue box */}
-            <div className="relative w-full max-w-[760px] h-[360px] bg-[#F8F4EE]/95 border-[8px] border-[#241B35] rounded-[2.5rem] overflow-hidden shadow-[10px_10px_0px_#241B35]">
+  object-fit:cover;
 
-              {/* top bar */}
-              <div className="absolute top-0 left-0 right-0 h-14 bg-[#241B35] flex items-center px-5 gap-3 z-20">
-                <div className="w-4 h-4 rounded-full bg-[#FF8A8A]" />
-                <div className="w-4 h-4 rounded-full bg-[#FFD37A]" />
-                <div className="w-4 h-4 rounded-full bg-[#98D89E]" />
-              </div>
+  position:absolute;
+  inset:0;
+}
 
-              {/* text */}
-              <div className="h-full flex flex-col justify-center px-10 py-12">
+/* =========================
+   HOTSPOTS
+========================= */
 
-                <div className="text-[#3A2C43] text-[18px] md:text-[24px] leading-[1.6] font-medium whitespace-pre-wrap">
-                  {typedText}
-                  <span className="animate-pulse">|</span>
-                </div>
+.hotspot{
+  position:absolute;
 
-              </div>
+  background:transparent;
 
-              {/* button */}
-              <button
-                onClick={() => setScreen("room")}
-                className="absolute bottom-6 left-8 px-7 py-4 bg-[#8FA36B] text-[#F8F4EE] border-[4px] border-[#241B35] rounded-2xl shadow-[5px_5px_0px_#241B35] hover:translate-y-[2px] hover:shadow-none transition-all font-mono uppercase tracking-[0.2em] text-sm"
-              >
-                Enter World
-              </button>
+  border:none;
 
-            </div>
-          </div>
-        </section>
-      )}
+  cursor:pointer;
 
-      {/* ROOM SCREEN */}
-      {screen === "room" && (
-        <section className="absolute inset-0 overflow-hidden">
+  z-index:10;
 
-          <img
-            src="/room-bg.png"
-            alt="Cozy Room"
-            className="w-full h-full object-cover"
-          />
+  transition:0.2s ease;
+}
 
-          <div className="absolute inset-0 bg-black/10" />
+.hotspot:hover{
+  transform:scale(1.05);
+}
 
-          {/* PC hotspot */}
-          <button
-            onClick={() => setShowDesktop(true)}
-            className="absolute left-[49%] top-[47%] group"
-          >
-            <div className="w-5 h-5 rounded-full bg-[#FFD7F3] border-2 border-white animate-pulse shadow-[0_0_20px_#FFD7F3]" />
+/* contacts */
 
-            <span className="absolute left-8 top-0 opacity-0 group-hover:opacity-100 transition-all bg-[#241B35]/90 text-white px-3 py-1 rounded-full text-xs font-mono whitespace-nowrap">
-              Open PC
-            </span>
-          </button>
+.contacts-hotspot{
+  left:10px;
+  top:10px;
 
-          {/* journal hotspot */}
-          <button className="absolute right-[28%] bottom-[28%] group">
-            <div className="w-5 h-5 rounded-full bg-[#FFD7F3] border-2 border-white animate-pulse shadow-[0_0_20px_#FFD7F3]" />
+  width:160px;
+  height:140px;
+}
 
-            <span className="absolute left-8 top-0 opacity-0 group-hover:opacity-100 transition-all bg-[#241B35]/90 text-white px-3 py-1 rounded-full text-xs font-mono whitespace-nowrap">
-              Open Journal
-            </span>
-          </button>
+/* projects */
 
-          {/* sticky notes hotspot */}
-          <button className="absolute right-[36%] top-[42%] group">
-            <div className="w-5 h-5 rounded-full bg-[#FFD7F3] border-2 border-white animate-pulse shadow-[0_0_20px_#FFD7F3]" />
+.projects-hotspot{
+  left:10px;
+  top:160px;
 
-            <span className="absolute left-8 top-0 opacity-0 group-hover:opacity-100 transition-all bg-[#241B35]/90 text-white px-3 py-1 rounded-full text-xs font-mono whitespace-nowrap">
-              Sticky Notes
-            </span>
-          </button>
+  width:170px;
+  height:150px;
+}
 
-        </section>
-      )}
+/* diary */
 
-      {/* DESKTOP */}
-      {showDesktop && <Desktop />}
+.diary-hotspot{
+  left:10px;
+  top:330px;
 
-    </main>
-  );
+  width:170px;
+  height:160px;
+}
+
+/* github */
+
+.github-hotspot{
+  left:10px;
+  top:520px;
+
+  width:180px;
+  height:160px;
+}
+
+/* skills */
+
+.skills-hotspot{
+  left:10px;
+  top:700px;
+
+  width:180px;
+  height:160px;
+}
+
+/* music */
+
+.music-hotspot{
+  right:20px;
+  top:80px;
+
+  width:360px;
+  height:320px;
+}
+
+/* sticky note */
+
+.note-hotspot{
+  right:40px;
+  top:420px;
+
+  width:330px;
+  height:320px;
+}
+
+/* internet */
+
+.internet-hotspot{
+  left:540px;
+  bottom:0;
+
+  width:260px;
+  height:90px;
+}
+
+/* docs */
+
+.docs-hotspot{
+  left:820px;
+  bottom:0;
+
+  width:220px;
+  height:90px;
+}
+
+/* start button */
+
+.start-hotspot{
+  left:0;
+  bottom:0;
+
+  width:180px;
+  height:90px;
+}
+
+
+
+.popup-window{
+  width:720px;
+  height:480px;
+
+  position:absolute;
+
+  top:50%;
+  left:50%;
+
+  transform:translate(-50%,-50%);
+
+  background:#ece4ff;
+
+  border:5px solid #241B35;
+
+  border-radius:22px;
+
+  overflow:hidden;
+
+  z-index:500;
+
+  box-shadow:
+    0 0 45px rgba(0,0,0,0.45);
+
+  animation:popupOpen 0.25s ease;
+}
+
+.popup-header{
+  height:58px;
+
+  background:
+    linear-gradient(
+      to right,
+      #6c4fc6,
+      #b78dff
+    );
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  padding:0 22px;
+
+  color:white;
+
+  font-size:12px;
+}
+
+.popup-header button{
+  width:34px;
+  height:34px;
+
+  border:none;
+
+  border-radius:8px;
+
+  background:#ff7272;
+
+  color:white;
+
+  cursor:pointer;
+
+  font-size:18px;
+
+  transition:0.2s ease;
+}
+
+.popup-header button:hover{
+  transform:scale(1.08);
+}
+
+.popup-content{
+  padding:40px;
+
+  color:#2d2145;
+
+  line-height:2;
+}
+
+.popup-content h1{
+  margin-bottom:30px;
+
+  font-size:22px;
+}
+
+.popup-content p{
+  font-size:12px;
+}
+
+@keyframes popupOpen{
+  from{
+    opacity:0;
+    transform:
+      translate(-50%,-50%)
+      scale(0.8);
+  }
+
+  to{
+    opacity:1;
+    transform:
+      translate(-50%,-50%)
+      scale(1);
+  }
+}
+
+@keyframes desktopOpen{
+  from{
+    opacity:0;
+    transform:
+      translate(-50%,-50%)
+      scale(0.9);
+  }
+
+  to{
+    opacity:1;
+    transform:
+      translate(-50%,-50%)
+      scale(1);
+  }
+}
+
+
+
+@media(max-width:1200px){
+
+  .desktop{
+    width:95%;
+    height:90%;
+  }
+
+  .popup-window{
+    width:92%;
+    height:80%;
+  }
+
 }

@@ -1,72 +1,117 @@
 import { useState } from "react";
 import "../App.css";
 
-import wallpaper from "../assets/bg.png";
-import taskbar from "../assets/taskbar.png";
-
-import diaryIcon from "../assets/diary.png";
-import projectsIcon from "../assets/projects.png";
-import skillsIcon from "../assets/skills.png";
-import contactsIcon from "../assets/contacts.png";
-import githubIcon from "../assets/github.png";
+import wallpaper from "../assets/desktop-wallpaper.png";
 
 function Desktop() {
+
   const [openWindow, setOpenWindow] = useState(null);
 
   return (
+
     <div className="desktop">
 
-      <img src={wallpaper} className="wallpaper" />
+      {/* wallpaper */}
+      <img
+        src={wallpaper}
+        className="wallpaper"
+        alt="desktop"
+      />
 
-      <div className="icons-area">
+      {/* CONTACTS */}
+      <button
+        className="hotspot contacts-hotspot"
+        onClick={() => setOpenWindow("Contacts")}
+      />
 
-        <div className="desktop-icon" onClick={() => setOpenWindow("Diary")}>
-          <img src={diaryIcon} />
-          <p>Diary</p>
-        </div>
+      {/* PROJECTS */}
+      <button
+        className="hotspot projects-hotspot"
+        onClick={() => setOpenWindow("Projects")}
+      />
 
-        <div className="desktop-icon" onClick={() => setOpenWindow("Projects")}>
-          <img src={projectsIcon} />
-          <p>Projects</p>
-        </div>
+      {/* DIARY */}
+      <button
+        className="hotspot diary-hotspot"
+        onClick={() => setOpenWindow("Diary")}
+      />
 
-        <div className="desktop-icon" onClick={() => setOpenWindow("Skills")}>
-          <img src={skillsIcon} />
-          <p>Skills</p>
-        </div>
+      {/* GITHUB */}
+      <button
+        className="hotspot github-hotspot"
+        onClick={() => setOpenWindow("Github")}
+      />
 
-        <div className="desktop-icon" onClick={() => setOpenWindow("Contacts")}>
-          <img src={contactsIcon} />
-          <p>Contacts</p>
-        </div>
+      {/* SKILLS */}
+      <button
+        className="hotspot skills-hotspot"
+        onClick={() => setOpenWindow("Skills")}
+      />
 
-        <div className="desktop-icon" onClick={() => setOpenWindow("Github")}>
-          <img src={githubIcon} />
-          <p>Github</p>
-        </div>
+      {/* MUSIC */}
+      <button
+        className="hotspot music-hotspot"
+        onClick={() => setOpenWindow("Music")}
+      />
 
-      </div>
+      {/* STICKY NOTE */}
+      <button
+        className="hotspot note-hotspot"
+        onClick={() => setOpenWindow("Notes")}
+      />
+
+      {/* INTERNET */}
+      <button
+        className="hotspot internet-hotspot"
+        onClick={() => setOpenWindow("Internet")}
+      />
+
+      {/* DOCS */}
+      <button
+        className="hotspot docs-hotspot"
+        onClick={() => setOpenWindow("Docs")}
+      />
+
+      {/* START */}
+      <button
+        className="hotspot start-hotspot"
+        onClick={() => setOpenWindow("Start")}
+      />
+
+      {/* POPUP WINDOW */}
 
       {openWindow && (
+
         <div className="popup-window">
+
           <div className="popup-header">
-            <span>{openWindow}.exe</span>
+
+            <span>
+              {openWindow}.exe
+            </span>
 
             <button onClick={() => setOpenWindow(null)}>
               ✕
             </button>
+
           </div>
 
           <div className="popup-content">
+
             <h1>{openWindow}</h1>
-            <p>content coming soon...</p>
+
+            <p>
+              content coming soon...
+            </p>
+
           </div>
+
         </div>
+
       )}
 
-      <img src={taskbar} className="taskbar" />
-
     </div>
+
   );
 }
 
