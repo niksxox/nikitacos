@@ -183,6 +183,22 @@ body{
   backdrop-filter:blur(3px);
 }
 
+.desktop::after{
+  content:"";
+
+  position:absolute;
+  inset:0;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.05),
+      rgba(0,0,0,0.08)
+    );
+
+  pointer-events:none;
+}
+
 .wallpaper{
   width:100%;
   height:100%;
