@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import "./Desktop.css";
 
-/* ── window registry ── */
 const WINDOWS = {
   about: {
     id: "about", title: "about.me", icon: "🧙‍♀️",
@@ -25,15 +24,12 @@ const WINDOWS = {
   },
 };
 
-
-
 export default function Desktop({ onClose }) {
-  const [openWindows, setOpenWindows] = useState([]);   // array of window ids
+  const [openWindows, setOpenWindows] = useState([]);
   const [focused,     setFocused]     = useState(null);
   const [positions,   setPositions]   = useState({});
   const [clock,       setClock]       = useState("");
 
-  /* clock */
   useEffect(() => {
     function tick() {
       const d = new Date();
@@ -50,7 +46,6 @@ export default function Desktop({ onClose }) {
   function openWindow(key) {
     if (!openWindows.includes(key)) {
       setOpenWindows(prev => [...prev, key]);
-      // stagger position slightly per window
       const base = WINDOWS[key].defaultPos;
       setPositions(prev => ({
         ...prev,
@@ -72,44 +67,18 @@ export default function Desktop({ onClose }) {
   return (
     <div className="dt-overlay">
       <div className="dt-shell">
-
-        {/* ── WALLPAPER ── */}
         <img className="dt-wallpaper" src="/src/assets/Desktop.png" alt="wallpaper"
           onError={e => { e.target.style.background = "linear-gradient(135deg,#4a9c6f,#87ceeb)"; e.target.removeAttribute("src"); }}
         />
 
-        {/* ── MUSIC PLAYER ── */}
-        <MusicPlayer />
-
-        {/* ── STICKY NOTE ── */}
-        <div className="dt-sticky">
-          <div className="dt-sticky-tape" />
-          <p className="dt-sticky-heading">Note</p>
-          <ul>
-            <li>Be kind to yourself</li>
-            <li>Keep learning</li>
-            <li>Enjoy the little things</li>
-          </ul>
-          <span className="dt-sticky-smile">☺</span>
-        </div>
-
-        {/* ── INVISIBLE HOTSPOTS over wallpaper painted icons ──
-             Positions are % based so they scale with the shell.
-             Tweak left/top/width/height to align with your Desktop.png icons. ── */}
         <div className="dt-hotspots">
-          {/* Contacts — top of left column */}
           <button className="dt-hs" style={{left:"3%",  top:"4%",  width:"9%", height:"20%"}} onClick={() => openWindow("contact")} title="summon.me" />
-          {/* Projects — 2nd icon */}
           <button className="dt-hs" style={{left:"2.5%",top:"24%", width:"10%",height:"20%"}} onClick={() => openWindow("projects")} title="quests.exe" />
-          {/* Diary — 3rd icon */}
           <button className="dt-hs" style={{left:"2.5%",top:"44%", width:"10%",height:"18%"}} onClick={() => openWindow("about")} title="about.me" />
-          {/* GitHub — 4th icon */}
           <button className="dt-hs" style={{left:"2.5%",top:"62%", width:"10%",height:"18%"}} onClick={handleGitHub} title="github.url" />
-          {/* Skills — 5th icon */}
           <button className="dt-hs" style={{left:"2.5%",top:"80%", width:"10%",height:"16%"}} onClick={() => openWindow("skills")} title="inventory.sys" />
         </div>
 
-        {/* ── OPEN WINDOWS ── */}
         {openWindows.map(key => (
           <PixelWindow
             key={key}
@@ -123,7 +92,6 @@ export default function Desktop({ onClose }) {
           />
         ))}
 
-        {/* ── TASKBAR ── */}
         <div className="dt-taskbar">
           <button className="dt-start-btn">
             <span className="dt-start-icon">⊞</span> Start
@@ -146,16 +114,12 @@ export default function Desktop({ onClose }) {
           </div>
         </div>
 
-        {/* ── CLOSE DESKTOP ── */}
         <button className="dt-close-btn" onClick={onClose}>✕ Exit PC</button>
       </div>
     </div>
   );
 }
 
-/* ══════════════════════════════════════════════
-   PIXEL WINDOW — draggable, with content router
-══════════════════════════════════════════════ */
 function PixelWindow({ winKey, isFocused, position, size, onFocus, onClose, onMove }) {
   const win = WINDOWS[winKey];
 
@@ -175,7 +139,6 @@ function PixelWindow({ winKey, isFocused, position, size, onFocus, onClose, onMo
       style={{ left: position.x, top: position.y, width: size.w, maxHeight: size.h, zIndex: isFocused ? 30 : 20 }}
       onMouseDown={onFocus}
     >
-      {/* titlebar */}
       <div className="pw-titlebar" onMouseDown={startDrag}>
         <span className="pw-title">{win.icon} {win.title}</span>
         <div className="pw-controls">
@@ -184,11 +147,9 @@ function PixelWindow({ winKey, isFocused, position, size, onFocus, onClose, onMo
           <button className="pw-btn pw-close" onClick={e => { e.stopPropagation(); onClose(); }}>✕</button>
         </div>
       </div>
-      {/* menu bar */}
       <div className="pw-menubar">
         {["File","Edit","View","Help"].map(m => <span key={m} className="pw-menu-item">{m}</span>)}
       </div>
-      {/* body */}
       <div className="pw-body">
         <WindowContent winKey={winKey} />
       </div>
@@ -196,9 +157,6 @@ function PixelWindow({ winKey, isFocused, position, size, onFocus, onClose, onMo
   );
 }
 
-/* ══════════════════════════════════════════════
-   WINDOW CONTENT
-══════════════════════════════════════════════ */
 function WindowContent({ winKey }) {
   switch (winKey) {
     case "about":    return <AboutContent />;
@@ -283,9 +241,43 @@ function ProjectsContent() {
 
 /* ── SKILLS / INVENTORY ── */
 const SKILL_CATEGORIES = [
-  { label:"⚔ Frontend",  color:"#7ab8a4", items:[{n:"HTML5",i:"🌐"},{n:"CSS3",i:"🎨"},{n:"JavaScript",i:"⚡"},{n:"React",i:"⚛"}] },
-  { label:"🛡 Backend",  color:"#a58aa3", items:[{n:"Java",i:"☕"},{n:"Python",i:"🐍"},{n:"SQL",i:"🗄"},{n:"APIs",i:"🔌"}] },
-  { label:"🔧 Tools",    color:"#c9a96e", items:[{n:"Git",i:"🌿"},{n:"Figma",i:"✏"},{n:"VS Code",i:"💻"},{n:"GitHub",i:"🐙"}] },
+  {
+    label: "⚔ Frontend",
+    color: "#7ab8a4",
+    items: [
+      { n: "HTML",     i: "🌐" },
+      { n: "CSS",      i: "🎨" },
+      { n: "Tailwind", i: "💨" },
+      { n: "React",    i: "⚛"  },
+    ],
+  },
+  {
+    label: "🛡 Backend",
+    color: "#a58aa3",
+    items: [
+      { n: "Java",        i: "☕" },
+      { n: "Python",      i: "🐍" },
+      { n: "JavaScript",  i: "⚡" },
+      { n: "Spring Boot", i: "🍃" },
+    ],
+  },
+  {
+    label: "🗄 Database",
+    color: "#c9a96e",
+    items: [
+      { n: "MySQL", i: "🐬" },
+    ],
+  },
+  {
+    label: "🔧 DevTools",
+    color: "#b67a84",
+    items: [
+      { n: "Git",    i: "🌿" },
+      { n: "GitHub", i: "🐙" },
+      { n: "Vercel", i: "▲"  },
+      { n: "Render", i: "🚀" },
+    ],
+  },
 ];
 
 function SkillsContent() {
@@ -310,10 +302,10 @@ function SkillsContent() {
 
 /* ── CONTACTS ── */
 const CONTACTS = [
-  { icon:"📧", label:"Email",     val:"nikitas.7927@gmail.com",                                 href:"mailto:nikitas.7927@gmail.com" },
-  { icon:"🐙", label:"GitHub",    val:"github.com/niksxox",                                      href:"https://github.com/niksxox" },
-  { icon:"💼", label:"LinkedIn",  val:"nikita-singh-912777342",                                  href:"https://www.linkedin.com/in/nikita-singh-912777342/" },
-  { icon:"📸", label:"Instagram", val:"@3xp3ll1armus",                                           href:"https://www.instagram.com/3xp3ll1armus/" },
+  { icon:"📧", label:"Email",     val:"nikitas.7927@gmail.com",              href:"mailto:nikitas.7927@gmail.com" },
+  { icon:"🐙", label:"GitHub",    val:"github.com/niksxox",                   href:"https://github.com/niksxox" },
+  { icon:"💼", label:"LinkedIn",  val:"nikita-singh-912777342",               href:"https://www.linkedin.com/in/nikita-singh-912777342/" },
+  { icon:"📸", label:"Instagram", val:"@3xp3ll1armus",                        href:"https://www.instagram.com/3xp3ll1armus/" },
 ];
 
 function ContactContent() {
@@ -331,62 +323,6 @@ function ContactContent() {
       ))}
       <div className="wc-contact-note">
         Currently open to internship &amp; collaboration opportunities ✦
-      </div>
-    </div>
-  );
-}
-
-/* ══════════════════════════════════════════════
-   MUSIC PLAYER WIDGET
-══════════════════════════════════════════════ */
-function MusicPlayer() {
-  const [playing, setPlaying] = useState(true);
-  const [progress, setProgress] = useState(24); // percent
-
-  useEffect(() => {
-    if (!playing) return;
-    const id = setInterval(() => {
-      setProgress(p => p >= 100 ? 0 : p + 0.05);
-    }, 100);
-    return () => clearInterval(id);
-  }, [playing]);
-
-  const secs = Math.floor((progress / 100) * 225);
-  const fmt = s => `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`;
-
-  return (
-    <div className="dt-music">
-      <div className="dt-music-bar">
-        <span className="dt-music-bar-icon">♪</span>
-        <span className="dt-music-bar-title">Music</span>
-        <button className="dt-music-bar-btn">─</button>
-        <button className="dt-music-bar-btn">□</button>
-        <button className="dt-music-bar-btn">✕</button>
-      </div>
-      <div className="dt-music-body">
-        <div className="dt-music-track">
-          <span className="dt-music-note">♫</span>
-          <div>
-            <div className="dt-music-name">[{playing?"Playing":"Paused"}]</div>
-            <div className="dt-music-sub">Nostalgia Tune</div>
-          </div>
-          <div className="dt-music-time">{fmt(secs)} / 3:45</div>
-        </div>
-        <div className="dt-music-progress-wrap">
-          <div className="dt-music-progress-fill" style={{ width: `${progress}%` }} />
-        </div>
-        <div className="dt-music-controls">
-          <button className="dt-mc-btn" onClick={() => setProgress(0)}>◀◀</button>
-          <button className="dt-mc-btn dt-mc-play" onClick={() => setPlaying(p => !p)}>
-            {playing ? "⏸" : "▶"}
-          </button>
-          <button className="dt-mc-btn" onClick={() => setProgress(100)}>▶▶</button>
-          <button className="dt-mc-btn" onClick={() => { setPlaying(false); setProgress(0); }}>■</button>
-          <div className="dt-volume">
-            <span>🔊</span>
-            <div className="dt-vol-bar"><div className="dt-vol-fill" /></div>
-          </div>
-        </div>
       </div>
     </div>
   );

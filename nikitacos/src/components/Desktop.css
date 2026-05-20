@@ -50,9 +50,6 @@
 }
 .dt-close-btn:hover { background: #cc2222; }
 
-/* ══════════════════════════════════════════
-   MUSIC PLAYER  (top-right of desktop, matching wallpaper)
-══════════════════════════════════════════ */
 .dt-music {
   position: absolute;
   top: 12px; right: 54px;   /* pushed left to clear close btn */
@@ -336,4 +333,47 @@
   background: rgba(165,138,163,0.08); border: 1px dashed #a58aa3;
   font-size: 11px; color: #5a4a3a; font-style: italic; text-align: center;
   font-family: 'Cormorant Garamond', serif;
+}
+
+
+.wc-about-redirect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px 24px;
+  gap: 12px;
+  height: 100%;
+  min-height: 200px;
+}
+.wc-redirect-icon {
+  font-size: 52px;
+  animation: floatIcon 3s ease-in-out infinite;
+}
+@keyframes floatIcon {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+.wc-redirect-title {
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  color: #4a3860;
+  letter-spacing: 1px;
+}
+.wc-redirect-desc {
+  font-size: 13px;
+  color: #5a4a3a;
+  line-height: 1.7;
+  max-width: 320px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+}
+.wc-redirect-hint {
+  font-family: 'VT323', monospace;
+  font-size: 13px;
+  color: #b67a84;
+  letter-spacing: 1px;
+  margin-top: 8px;
+  animation: blink 2s step-end infinite;
 }

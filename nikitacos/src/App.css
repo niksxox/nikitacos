@@ -125,7 +125,7 @@ body { font-family: 'Nunito', sans-serif; background: #1a1228; overflow: hidden;
 
 /* positions matched to room-bg.png */
 .hotspot-pc      { left:47%;  top:46%; }
-.hotspot-journal { right:19%; bottom:28%; }
+.hotspot-journal { left: 70%; bottom: 25%; }
 .hotspot-guest   { right:29%; top:37%; }
 
 /* ══════════════════════════════════
