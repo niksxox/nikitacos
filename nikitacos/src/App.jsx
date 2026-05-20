@@ -1,338 +1,280 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+import { useState, useEffect } from "react";
+import Desktop from "./components/Desktop";
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+import "./App.css";
+
+const DIALOGUE = [
+  "Hey, I'm Nikita 🌸",
+  "The kettle is warm, and lamp is on.",
+  "Feel free to look around ✦",
+];
+
+export default function App() {
+  const [screen, setScreen]             = useState("loading");
+  const [loadReady, setLoadReady]       = useState(false);
+  const [typedText, setTypedText]       = useState("");
+  const [dialogueDone, setDialogueDone] = useState(false);
+  const [showDesktop, setShowDesktop]   = useState(false);
+  const [showDiary, setShowDiary]       = useState(false);
+  const [showGuest, setShowGuest]       = useState(false);
+  const [diaryTab, setDiaryTab]         = useState(0);
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoadReady(true), 3200);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (screen !== "intro") return;
+    let li = 0, ci = 0, built = "";
+    const tick = setInterval(() => {
+      if (li >= DIALOGUE.length) { clearInterval(tick); setDialogueDone(true); return; }
+      const line = DIALOGUE[li];
+      if (ci < line.length) { built += line[ci]; ci++; }
+      else { built += "\n"; li++; ci = 0; }
+      setTypedText(built);
+    }, 65);
+    return () => clearInterval(tick);
+  }, [screen]);
+
+  return (
+    <main className="app-root">
+
+      {/* ── STARS ── */}
+      {(screen === "loading" || screen === "intro") && (
+        <div className="starfield" aria-hidden="true">
+          {Array.from({ length: 80 }).map((_, i) => (
+            <span key={i} className="star" style={{
+              width:  `${Math.random() * 2.5 + 1}px`,
+              height: `${Math.random() * 2.5 + 1}px`,
+              top:    `${Math.random() * 100}%`,
+              left:   `${Math.random() * 100}%`,
+              animationDelay:    `${Math.random() * 3}s`,
+              animationDuration: `${1.5 + Math.random() * 2}s`,
+            }} />
+          ))}
+        </div>
+      )}
+
+      {/* ══════════ LOADING ══════════ */}
+      {screen === "loading" && (
+        <section className="screen loading-screen">
+          <div className="load-box">
+            <div className="load-title">NikiTacos.exe</div>
+            <div className="load-sub">✦ initializing portfolio... ✦</div>
+            <div className="load-bar-wrap"><div className="load-bar" /></div>
+            <button
+              className={`press-start${loadReady ? " ready" : ""}`}
+              disabled={!loadReady}
+              onClick={() => setScreen("intro")}
+            >[ PRESS START ]</button>
+          </div>
+        </section>
+      )}
+
+      {/* ══════════ INTRO ══════════ */}
+      {screen === "intro" && (
+        <section className="screen intro-screen">
+          <div className="glow glow-tl" aria-hidden="true" />
+          <div className="glow glow-br" aria-hidden="true" />
+          <div className="intro-layout">
+
+            <div className="avatar-frame">
+              <div className="pixel-titlebar">
+                <span className="dot dot-r"/><span className="dot dot-y"/><span className="dot dot-g"/>
+                <span className="pixel-titlebar-text">nikitacos.exe ♥</span>
+              </div>
+              <div className="avatar-img-wrap">
+                <img src="/avatar.png" alt="Nikita pixel avatar" />
+              </div>
+              <div className="avatar-footer"><p>still figuring it out ◡</p></div>
+            </div>
+
+            <div className="dialogue-box">
+              <div className="pixel-titlebar">
+                <span className="dot dot-r"/><span className="dot dot-y"/><span className="dot dot-g"/>
+                <span className="pixel-titlebar-text">nikita.dialogue</span>
+              </div>
+              <div className="dialogue-text">
+                {typedText.split("\n").map((line, i, arr) => (
+                  <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+                ))}
+                <span className="blink-cursor">▌</span>
+              </div>
+              <div className="dialogue-footer">
+                <button
+                  className={`pixel-btn${dialogueDone ? " visible" : ""}`}
+                  disabled={!dialogueDone}
+                  onClick={() => setScreen("room")}
+                >[ Enter World ]</button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      )}
+
+      {/* ══════════ ROOM ══════════ */}
+      {screen === "room" && (
+        <section className="screen room-screen">
+          <img className="room-bg" src="/room-bg.png" alt="cozy room" />
+          <div className="room-overlay" aria-hidden="true" />
+
+          {/* Glowing dot — PC */}
+          <button className="hotspot hotspot-pc" onClick={() => setShowDesktop(true)}>
+            <span className="hotspot-dot" />
+            <span className="hotspot-label">🖥 Open PC</span>
+          </button>
+
+          {/* Glowing dot — Diary */}
+          <button className="hotspot hotspot-journal" onClick={() => setShowDiary(true)}>
+            <span className="hotspot-dot" />
+            <span className="hotspot-label">📔 Open Diary</span>
+          </button>
+
+          {/* Glowing dot — Guestbook */}
+          <button className="hotspot hotspot-guest" onClick={() => setShowGuest(true)}>
+            <span className="hotspot-dot" />
+            <span className="hotspot-label">✍️ Guestbook</span>
+          </button>
+        </section>
+      )}
+
+      {/* ══════════ PC DESKTOP ══════════ */}
+      {showDesktop && <Desktop onClose={() => setShowDesktop(false)} />}
+
+      {/* ══════════ DIARY ══════════ */}
+      {showDiary && (
+        <Diary
+          initialTab={diaryTab}
+          onClose={() => { setShowDiary(false); setDiaryTab(0); }}
+        />
+      )}
+
+      {/* ══════════ GUESTBOOK POPUP ══════════ */}
+      {showGuest && <GuestbookPopup onClose={() => setShowGuest(false)} />}
+
+    </main>
+  );
 }
 
-body{
-  overflow:hidden;
-  font-family:'Press Start 2P', cursive;
-}
-
-
-.desktop{
-  width:78%;
-  height:78%;
-
-  max-width:1400px;
-  max-height:820px;
-
-  position:absolute;
-
-  top:50%;
-  left:50%;
-
-  transform:translate(-50%,-50%);
-
-  overflow:hidden;
-
-  z-index:100;
-
-  border:5px solid rgba(255,255,255,0.75);
-
-  border-radius:22px;
-
-  background:rgba(0,0,0,0.08);
-
-  backdrop-filter:blur(4px);
-
-  box-shadow:
-    0 0 60px rgba(0,0,0,0.45),
-    0 0 0 4px rgba(255,255,255,0.08);
-
-  animation:desktopOpen 0.35s ease;
-}
-
-/* subtle screen glow */
-
-.desktop::after{
-  content:"";
-
-  position:absolute;
-  inset:0;
-
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.04),
-      rgba(0,0,0,0.08)
-    );
-
-  pointer-events:none;
-}
-
-
-.wallpaper{
-  width:100%;
-  height:100%;
-
-  object-fit:cover;
-
-  position:absolute;
-  inset:0;
-}
-
-/* =========================
-   HOTSPOTS
-========================= */
-
-.hotspot{
-  position:absolute;
-
-  background:transparent;
-
-  border:none;
-
-  cursor:pointer;
-
-  z-index:10;
-
-  transition:0.2s ease;
-}
-
-.hotspot:hover{
-  transform:scale(1.05);
-}
-
-/* contacts */
-
-.contacts-hotspot{
-  left:10px;
-  top:10px;
-
-  width:160px;
-  height:140px;
-}
-
-/* projects */
-
-.projects-hotspot{
-  left:10px;
-  top:160px;
-
-  width:170px;
-  height:150px;
-}
-
-/* diary */
-
-.diary-hotspot{
-  left:10px;
-  top:330px;
-
-  width:170px;
-  height:160px;
-}
-
-/* github */
-
-.github-hotspot{
-  left:10px;
-  top:520px;
-
-  width:180px;
-  height:160px;
-}
-
-/* skills */
-
-.skills-hotspot{
-  left:10px;
-  top:700px;
-
-  width:180px;
-  height:160px;
-}
-
-/* music */
-
-.music-hotspot{
-  right:20px;
-  top:80px;
-
-  width:360px;
-  height:320px;
-}
-
-/* sticky note */
-
-.note-hotspot{
-  right:40px;
-  top:420px;
-
-  width:330px;
-  height:320px;
-}
-
-/* internet */
-
-.internet-hotspot{
-  left:540px;
-  bottom:0;
-
-  width:260px;
-  height:90px;
-}
-
-/* docs */
-
-.docs-hotspot{
-  left:820px;
-  bottom:0;
-
-  width:220px;
-  height:90px;
-}
-
-/* start button */
-
-.start-hotspot{
-  left:0;
-  bottom:0;
-
-  width:180px;
-  height:90px;
-}
-
-
-
-.popup-window{
-  width:720px;
-  height:480px;
-
-  position:absolute;
-
-  top:50%;
-  left:50%;
-
-  transform:translate(-50%,-50%);
-
-  background:#ece4ff;
-
-  border:5px solid #241B35;
-
-  border-radius:22px;
-
-  overflow:hidden;
-
-  z-index:500;
-
-  box-shadow:
-    0 0 45px rgba(0,0,0,0.45);
-
-  animation:popupOpen 0.25s ease;
-}
-
-.popup-header{
-  height:58px;
-
-  background:
-    linear-gradient(
-      to right,
-      #6c4fc6,
-      #b78dff
-    );
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:space-between;
-
-  padding:0 22px;
-
-  color:white;
-
-  font-size:12px;
-}
-
-.popup-header button{
-  width:34px;
-  height:34px;
-
-  border:none;
-
-  border-radius:8px;
-
-  background:#ff7272;
-
-  color:white;
-
-  cursor:pointer;
-
-  font-size:18px;
-
-  transition:0.2s ease;
-}
-
-.popup-header button:hover{
-  transform:scale(1.08);
-}
-
-.popup-content{
-  padding:40px;
-
-  color:#2d2145;
-
-  line-height:2;
-}
-
-.popup-content h1{
-  margin-bottom:30px;
-
-  font-size:22px;
-}
-
-.popup-content p{
-  font-size:12px;
-}
-
-@keyframes popupOpen{
-  from{
-    opacity:0;
-    transform:
-      translate(-50%,-50%)
-      scale(0.8);
+/* ══════════════════════════════════════════
+   GUESTBOOK POPUP — styled like your screenshot
+══════════════════════════════════════════ */
+function GuestbookPopup({ onClose }) {
+  const [name, setName]       = useState("");
+  const [email, setEmail]     = useState("");
+  const [note, setNote]       = useState("");
+  const [sent, setSent]       = useState(false);
+  const [notes, setNotes]     = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  /* load existing notes on mount */
+  useEffect(() => {
+    (async () => {
+      try {
+        const r = await window.storage.get("guestbook-notes", true);
+        setNotes(r ? JSON.parse(r.value) : []);
+      } catch { setNotes([]); }
+      setLoading(false);
+    })();
+  }, []);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!name.trim() || !note.trim()) return;
+    const entry = { name: name.trim(), email: email.trim(), note: note.trim(), ts: Date.now() };
+    const updated = [...notes, entry];
+    try { await window.storage.set("guestbook-notes", JSON.stringify(updated), true); } catch {}
+    setNotes(updated);
+    setSent(true);
+    setName(""); setEmail(""); setNote("");
+    setTimeout(() => setSent(false), 3000);
   }
 
-  to{
-    opacity:1;
-    transform:
-      translate(-50%,-50%)
-      scale(1);
-  }
-}
+  const NOTE_COLORS = ["#fef3a0","#ffd6e0","#d4f0c0","#dce8ff","#f3e5f5","#ffe0cc"];
+  const NOTE_ROTS   = [-3, 2, -1, 3, -2, 1.5];
 
-@keyframes desktopOpen{
-  from{
-    opacity:0;
-    transform:
-      translate(-50%,-50%)
-      scale(0.9);
-  }
+  return (
+    <div className="gb-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="gb-popup">
 
-  to{
-    opacity:1;
-    transform:
-      translate(-50%,-50%)
-      scale(1);
-  }
-}
+        {/* tape strip at top */}
+        <div className="gb-tape" />
 
+        {/* close */}
+        <button className="gb-close" onClick={onClose}>✕</button>
 
+        {/* header */}
+        <div className="gb-header">
+          <p className="gb-eyebrow">LEAVE · A · NOTE</p>
+          <h2 className="gb-title">Drop me a sticky note</h2>
+          <p className="gb-subtitle">I'll find it on my desk by morning ✨</p>
+        </div>
 
-@media(max-width:1200px){
+        {/* form */}
+        <form className="gb-form" onSubmit={handleSubmit}>
+          <div className="gb-field">
+            <label className="gb-label">YOUR NAME</label>
+            <input className="gb-input" value={name} onChange={e => setName(e.target.value)} maxLength={40} required />
+          </div>
+          <div className="gb-field">
+            <label className="gb-label">YOUR EMAIL</label>
+            <input className="gb-input" type="email" value={email} onChange={e => setEmail(e.target.value)} maxLength={80} />
+          </div>
+          <div className="gb-field">
+            <label className="gb-label">YOUR NOTE</label>
+            <textarea className="gb-textarea" value={note} onChange={e => setNote(e.target.value)} maxLength={200} required />
+          </div>
+          <button className="gb-submit" type="submit">
+            <span>✈</span> SEND NOTE
+          </button>
+          {sent && <p className="gb-success">Note pinned! ✦ Thank you for visiting~</p>}
+        </form>
 
-  .desktop{
-    width:95%;
-    height:90%;
-  }
+        {/* divider */}
+        <div className="gb-divider">
+          <span className="gb-divider-label">OR FIND ME AT</span>
+        </div>
 
-  .popup-window{
-    width:92%;
-    height:80%;
-  }
+        {/* socials */}
+        <div className="gb-socials">
+          {[
+            { icon: "🐙", href: "https://github.com/niksxox" },
+            { icon: "💼", href: "https://www.linkedin.com/in/nikita-singh-912777342/" },
+            { icon: "📸", href: "https://www.instagram.com/3xp3ll1armus/" },
+            { icon: "📧", href: "mailto:nikitas.7927@gmail.com" },
+          ].map(s => (
+            <a key={s.href} href={s.href} target="_blank" rel="noreferrer" className="gb-social-btn">
+              {s.icon}
+            </a>
+          ))}
+        </div>
 
+        {/* existing notes wall */}
+        {!loading && notes.length > 0 && (
+          <div className="gb-notes-section">
+            <p className="gb-notes-heading">✦ notes on my wall</p>
+            <div className="gb-notes-wall">
+              {notes.slice(-12).map((n, i) => (
+                <div
+                  key={n.ts}
+                  className="gb-wall-note"
+                  style={{
+                    background: NOTE_COLORS[i % NOTE_COLORS.length],
+                    transform: `rotate(${NOTE_ROTS[i % NOTE_ROTS.length]}deg)`,
+                  }}
+                >
+                  <div className="gb-wall-pin" />
+                  <p className="gb-wall-name">{n.name}</p>
+                  <p className="gb-wall-text">{n.note}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
 }
