@@ -447,11 +447,7 @@
   outline: none !important;
 }
 
-/* ═══════════════════════════════════════════
-   ADD THIS RULE TO Desktop.css
-═══════════════════════════════════════════ */
 
-/* ── RESUME DOWNLOAD ICON ── */
 .dt-resume-icon {
   position: absolute;
   left: 1%;
