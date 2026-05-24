@@ -1,6 +1,3 @@
-/* ══════════════════════════════════════════
-   DESKTOP OVERLAY & SHELL
-══════════════════════════════════════════ */
 .dt-overlay {
   position: fixed;
   inset: 0;
@@ -33,7 +30,6 @@
   object-fit: cover;
 }
 
-/* ── CLOSE BUTTON (top-right corner of shell) ── */
 .dt-close-btn {
   position: absolute;
   top: 10px; right: 14px;
@@ -52,7 +48,7 @@
 
 .dt-music {
   position: absolute;
-  top: 12px; right: 54px;   /* pushed left to clear close btn */
+  top: 12px; right: 54px;   
   width: 240px;
   background: rgba(210,200,235,0.96);
   border: 2px solid rgba(150,130,190,0.7);
@@ -105,9 +101,7 @@
 .dt-vol-bar  { width: 40px; height: 8px; background: rgba(150,130,190,0.25); border: 1px solid rgba(150,130,190,0.5); }
 .dt-vol-fill { height: 100%; width: 70%; background: #a48cc8; }
 
-/* ══════════════════════════════════════════
-   STICKY NOTE  (bottom of music player area, matching wallpaper)
-══════════════════════════════════════════ */
+
 .dt-sticky {
   position: absolute;
   top: 178px; right: 54px;
@@ -146,17 +140,15 @@
 .dt-sticky li { margin-bottom: 2px; }
 .dt-sticky-smile { float: right; margin-top: 4px; font-size: 14px; }
 
-/* ══════════════════════════════════════════
-   INVISIBLE HOTSPOT ZONES over wallpaper icons
-══════════════════════════════════════════ */
+
 .dt-hotspots {
   position: absolute;
   inset: 0;
   z-index: 5;
-  pointer-events: none; /* container is pass-through */
+  pointer-events: none; 
 }
 
-/* each hotspot button is invisible but clickable */
+
 .dt-hs {
   position: absolute;
   background: transparent;
@@ -164,17 +156,13 @@
   cursor: pointer;
   pointer-events: all;
   border-radius: 4px;
-  /* debug: uncomment below to see hit areas */
-  /* background: rgba(255,0,0,0.2); */
 }
 .dt-hs:hover {
   background: rgba(255,255,255,0.12);
   outline: 2px solid rgba(255,255,255,0.3);
+  border-radius: 8px; /* ← add this */
 }
 
-/* ══════════════════════════════════════════
-   TASKBAR
-══════════════════════════════════════════ */
 .dt-taskbar {
   position: absolute; bottom: 0; left: 0; right: 0;
   height: 32px;
@@ -225,9 +213,7 @@
 }
 .dt-clock { font-family: 'VT323', monospace; font-size: 15px; color: #2d2416; }
 
-/* ══════════════════════════════════════════
-   PIXEL WINDOW
-══════════════════════════════════════════ */
+
 .pw {
   position: absolute;
   display: flex; flex-direction: column;
@@ -280,9 +266,7 @@
 .pw-body::-webkit-scrollbar-track { background: #e8e0d8; }
 .pw-body::-webkit-scrollbar-thumb { background: #a48cc8; border: 2px solid #e8e0d8; }
 
-/* ══════════════════════════════════════════
-   WINDOW CONTENT STYLES
-══════════════════════════════════════════ */
+
 
 /* — ABOUT — */
 .wc-about { display: grid; grid-template-columns: 160px 1fr; gap: 20px; align-items: start; }
@@ -376,4 +360,138 @@
   letter-spacing: 1px;
   margin-top: 8px;
   animation: blink 2s step-end infinite;
+}
+
+
+.dt-wallpaper-fallback {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(120,180,140,0.35) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 20%, rgba(135,180,220,0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 80%, rgba(165,138,163,0.25) 0%, transparent 50%),
+    linear-gradient(160deg, #2a4a35 0%, #3d6b55 30%, #5a7a8a 60%, #4a5a7a 100%);
+}
+
+
+.dt-resume-icon {
+  position: absolute;
+  left: 1%;
+  top: 79%;
+  width: 12%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  z-index: 6;
+  padding: 6px 4px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.dt-resume-icon:hover {
+  background: rgba(255,255,255,0.18);
+  outline: 2px solid rgba(255,255,255,0.35);
+}
+.dt-resume-img {
+  font-size: 42px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+.dt-resume-label {
+  font-family: 'VT323', monospace;
+  font-size: 15px;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6);
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+
+.dt-resume-icon {
+  position: absolute;
+  left: 1%;
+  top: 79%;
+  width: 12%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  z-index: 6;
+  padding: 6px 4px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.dt-resume-icon:hover {
+  background: rgba(255,255,255,0.18);
+  outline: 2px solid rgba(255,255,255,0.35);
+}
+.dt-resume-img {
+  font-size: 42px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+.dt-resume-label {
+  font-family: 'VT323', monospace;
+  font-size: 15px;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6);
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.dt-hs:hover {
+  background: transparent !important;
+  outline: none !important;
+}
+
+/* ═══════════════════════════════════════════
+   ADD THIS RULE TO Desktop.css
+═══════════════════════════════════════════ */
+
+/* ── RESUME DOWNLOAD ICON ── */
+.dt-resume-icon {
+  position: absolute;
+  left: 1%;
+  top: 79%;
+  width: 12%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  z-index: 6;
+  padding: 6px 4px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.dt-resume-icon:hover {
+  background: rgba(255,255,255,0.18);
+  outline: 2px solid rgba(255,255,255,0.35);
+}
+.dt-resume-img {
+  font-size: 42px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+.dt-resume-label {
+  font-family: 'VT323', monospace;
+  font-size: 15px;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6);
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.dt-hs:hover {
+  background: transparent !important;
+  outline: none !important;
+}
+
+
+.wc-inv-grid {
+  grid-template-columns: repeat(4, 1fr) !important;
 }

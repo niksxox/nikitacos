@@ -67,17 +67,29 @@ export default function Desktop({ onClose }) {
   return (
     <div className="dt-overlay">
       <div className="dt-shell">
-        <img className="dt-wallpaper" src="/src/assets/Desktop.png" alt="wallpaper"
-          onError={e => { e.target.style.background = "linear-gradient(135deg,#4a9c6f,#87ceeb)"; e.target.removeAttribute("src"); }}
+        
+        <img className="dt-wallpaper" src="/Desktop.png" alt="wallpaper"
+          onError={e => { e.target.style.display = "none"; e.target.parentElement.style.background = "linear-gradient(135deg,#4a9c6f,#87ceeb)"; }}
         />
 
         <div className="dt-hotspots">
-          <button className="dt-hs" style={{left:"3%",  top:"4%",  width:"9%", height:"20%"}} onClick={() => openWindow("contact")} title="summon.me" />
-          <button className="dt-hs" style={{left:"2.5%",top:"24%", width:"10%",height:"20%"}} onClick={() => openWindow("projects")} title="quests.exe" />
-          <button className="dt-hs" style={{left:"2.5%",top:"44%", width:"10%",height:"18%"}} onClick={() => openWindow("about")} title="about.me" />
-          <button className="dt-hs" style={{left:"2.5%",top:"62%", width:"10%",height:"18%"}} onClick={handleGitHub} title="github.url" />
-          <button className="dt-hs" style={{left:"2.5%",top:"80%", width:"10%",height:"16%"}} onClick={() => openWindow("skills")} title="inventory.sys" />
+      
+          <button className="dt-hs" style={{left:"1%", top:"4%",  width:"12%", height:"23%"}} onClick={() => openWindow("projects")} />
+       
+          <button className="dt-hs" style={{left:"1%", top:"29%", width:"12%", height:"23%"}} onClick={handleGitHub} />
+          
+          <button className="dt-hs" style={{left:"1%", top:"54%", width:"12%", height:"23%"}} onClick={() => openWindow("skills")} />
         </div>
+
+     
+        <a
+          className="dt-resume-icon"
+          href="/resume.pdf"
+          download="Nikita_Singh_Resume.pdf"
+        >
+          <div className="dt-resume-img">📄</div>
+          <div className="dt-resume-label">Resume</div>
+        </a>
 
         {openWindows.map(key => (
           <PixelWindow
@@ -168,7 +180,7 @@ function WindowContent({ winKey }) {
   }
 }
 
-/* ── ABOUT ── */
+
 function AboutContent() {
   return (
     <div className="wc-about">
@@ -207,7 +219,7 @@ function AboutContent() {
   );
 }
 
-/* ── PROJECTS ── */
+
 const PROJECTS = [
   { emoji:"📊", title:"Netflix Data Pipeline",       tech:["Python","MySQL","ETL"],          desc:"Automated Netflix-style ETL workflow, data ingestion, transformation & dashboard.", link:"https://github.com/niksxox/Netflix-data-pipeline-project" },
   { emoji:"🎵", title:"Music Player (DLL)",           tech:["Java","DLL"],                    desc:"Retro-inspired modular music player built with Java DLL architecture.",              link:"https://github.com/niksxox/Music-Player" },
@@ -239,37 +251,42 @@ function ProjectsContent() {
   );
 }
 
-/* ── SKILLS / INVENTORY ── */
+
 const SKILL_CATEGORIES = [
   {
-    label: "⚔ Frontend",
+    label: "📝 Languages",
     color: "#7ab8a4",
     items: [
-      { n: "HTML",     i: "🌐" },
-      { n: "CSS",      i: "🎨" },
-      { n: "Tailwind", i: "💨" },
-      { n: "React",    i: "⚛"  },
+      { n: "Python",     i: "🐍" },
+      { n: "Java",       i: "☕" },
+      { n: "C",          i: "⚙"  },
+      { n: "R",          i: "📊" },
+      { n: "SQL",        i: "🗃"  },
+      { n: "HTML",       i: "🌐" },
+      { n: "CSS",        i: "🎨" },
+      { n: "JavaScript", i: "⚡" },
     ],
   },
   {
-    label: "🛡 Backend",
+    label: "🧩 Frameworks & Libraries",
     color: "#a58aa3",
     items: [
-      { n: "Java",        i: "☕" },
-      { n: "Python",      i: "🐍" },
-      { n: "JavaScript",  i: "⚡" },
+      { n: "React",       i: "⚛"  },
       { n: "Spring Boot", i: "🍃" },
+      { n: "Tailwind",    i: "💨" },
+      { n: "NumPy",       i: "🔢" },
+      { n: "Pandas",      i: "🐼" },
     ],
   },
   {
-    label: "🗄 Database",
+    label: "🗄 Databases",
     color: "#c9a96e",
     items: [
       { n: "MySQL", i: "🐬" },
     ],
   },
   {
-    label: "🔧 DevTools",
+    label: "🔧 Tools & Platforms",
     color: "#b67a84",
     items: [
       { n: "Git",    i: "🌿" },
@@ -300,7 +317,6 @@ function SkillsContent() {
   );
 }
 
-/* ── CONTACTS ── */
 const CONTACTS = [
   { icon:"📧", label:"Email",     val:"nikitas.7927@gmail.com",              href:"mailto:nikitas.7927@gmail.com" },
   { icon:"🐙", label:"GitHub",    val:"github.com/niksxox",                   href:"https://github.com/niksxox" },

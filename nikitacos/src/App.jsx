@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Desktop from "./components/Desktop";
-
 import "./App.css";
 
 const DIALOGUE = [
@@ -8,6 +7,17 @@ const DIALOGUE = [
   "The kettle is warm, and lamp is on.",
   "Feel free to look around ✦",
 ];
+
+
+const STARS = Array.from({ length: 80 }, (_, i) => ({
+  id: i,
+  width:  `${Math.random() * 2.5 + 1}px`,
+  height: `${Math.random() * 2.5 + 1}px`,
+  top:    `${Math.random() * 100}%`,
+  left:   `${Math.random() * 100}%`,
+  animationDelay:    `${Math.random() * 3}s`,
+  animationDuration: `${1.5 + Math.random() * 2}s`,
+}));
 
 export default function App() {
   const [screen, setScreen]             = useState("loading");
@@ -40,23 +50,23 @@ export default function App() {
   return (
     <main className="app-root">
 
-      {/* ── STARS ── */}
+      
       {(screen === "loading" || screen === "intro") && (
         <div className="starfield" aria-hidden="true">
-          {Array.from({ length: 80 }).map((_, i) => (
-            <span key={i} className="star" style={{
-              width:  `${Math.random() * 2.5 + 1}px`,
-              height: `${Math.random() * 2.5 + 1}px`,
-              top:    `${Math.random() * 100}%`,
-              left:   `${Math.random() * 100}%`,
-              animationDelay:    `${Math.random() * 3}s`,
-              animationDuration: `${1.5 + Math.random() * 2}s`,
+          {STARS.map(s => (
+            <span key={s.id} className="star" style={{
+              width:             s.width,
+              height:            s.height,
+              top:               s.top,
+              left:              s.left,
+              animationDelay:    s.animationDelay,
+              animationDuration: s.animationDuration,
             }} />
           ))}
         </div>
       )}
 
-      {/* ══════════ LOADING ══════════ */}
+      
       {screen === "loading" && (
         <section className="screen loading-screen">
           <div className="load-box">
@@ -72,22 +82,16 @@ export default function App() {
         </section>
       )}
 
-      {/* ══════════ INTRO ══════════ */}
       {screen === "intro" && (
         <section className="screen intro-screen">
           <div className="glow glow-tl" aria-hidden="true" />
           <div className="glow glow-br" aria-hidden="true" />
           <div className="intro-layout">
 
-            <div className="avatar-frame">
-              <div className="pixel-titlebar">
-                <span className="dot dot-r"/><span className="dot dot-y"/><span className="dot dot-g"/>
-                <span className="pixel-titlebar-text">nikitacos.exe ♥</span>
+            <div className="photo-frame">
+              <div className="photo-img-wrap">
+                <img src="/photo.png" alt="Nikita" className="photo-img" />
               </div>
-              <div className="avatar-img-wrap">
-                <img src="/avatar.png" alt="Nikita pixel avatar" />
-              </div>
-              <div className="avatar-footer"><p>still figuring it out ◡</p></div>
             </div>
 
             <div className="dialogue-box">
@@ -106,7 +110,7 @@ export default function App() {
                   className={`pixel-btn${dialogueDone ? " visible" : ""}`}
                   disabled={!dialogueDone}
                   onClick={() => setScreen("room")}
-                >[ Enter World ]</button>
+                >[ Enter 🌼]</button>
               </div>
             </div>
 
@@ -114,25 +118,22 @@ export default function App() {
         </section>
       )}
 
-      {/* ══════════ ROOM ══════════ */}
+      
       {screen === "room" && (
         <section className="screen room-screen">
           <img className="room-bg" src="/room-bg.png" alt="cozy room" />
           <div className="room-overlay" aria-hidden="true" />
 
-          {/* Glowing dot — PC */}
           <button className="hotspot hotspot-pc" onClick={() => setShowDesktop(true)}>
             <span className="hotspot-dot" />
             <span className="hotspot-label">🖥 Open PC</span>
           </button>
 
-          {/* Glowing dot — Diary */}
           <button className="hotspot hotspot-journal" onClick={() => setShowDiary(true)}>
             <span className="hotspot-dot" />
             <span className="hotspot-label">📔 Open Diary</span>
           </button>
 
-          {/* Glowing dot — Guestbook */}
           <button className="hotspot hotspot-guest" onClick={() => setShowGuest(true)}>
             <span className="hotspot-dot" />
             <span className="hotspot-label">✍️ Guestbook</span>
@@ -140,10 +141,10 @@ export default function App() {
         </section>
       )}
 
-      {/* ══════════ PC DESKTOP ══════════ */}
+      
       {showDesktop && <Desktop onClose={() => setShowDesktop(false)} />}
 
-      {/* ══════════ DIARY ══════════ */}
+      
       {showDiary && (
         <Diary
           initialTab={diaryTab}
@@ -151,25 +152,94 @@ export default function App() {
         />
       )}
 
-      {/* ══════════ GUESTBOOK POPUP ══════════ */}
+      
       {showGuest && <GuestbookPopup onClose={() => setShowGuest(false)} />}
 
     </main>
   );
 }
 
-/* ══════════════════════════════════════════
-   GUESTBOOK POPUP — styled like your screenshot
-══════════════════════════════════════════ */
+const DIARY_PAGES = [
+  { src: "/pg1.png", label: "meet me" },
+  { src: "/pg2.png", label: "academics" },
+  { src: "/pg3.png", label: "experiences" },
+];
+
+function Diary({ onClose }) {
+  const [page, setPage]       = useState(0);
+  const [turning, setTurning] = useState(false);
+  const [dir, setDir]         = useState("next");
+
+  function goTo(next) {
+    if (turning || next === page) return;
+    setDir(next > page ? "next" : "prev");
+    setTurning(true);
+    setTimeout(() => {
+      setPage(next);
+      setTurning(false);
+    }, 380);
+  }
+
+  return (
+    <div className="diary-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="diary-book">
+
+        <div className="diary-spine">
+          <span className="diary-spine-text">nikita's diary ♡</span>
+        </div>
+
+        <div className="diary-page-wrap">
+
+          <div className="diary-dots">
+            {DIARY_PAGES.map((_, i) => (
+              <button
+                key={i}
+                className={`diary-dot${page === i ? " active" : ""}`}
+                onClick={() => goTo(i)}
+              />
+            ))}
+          </div>
+
+          <div className={`diary-page-inner${turning ? ` turning-${dir}` : ""}`}>
+            <img
+              src={DIARY_PAGES[page].src}
+              alt={DIARY_PAGES[page].label}
+              className="diary-page-img"
+            />
+          </div>
+
+          <button
+            className="diary-arrow diary-arrow-left"
+            onClick={() => goTo(page - 1)}
+            disabled={page === 0}
+          >‹</button>
+          <button
+            className="diary-arrow diary-arrow-right"
+            onClick={() => goTo(page + 1)}
+            disabled={page === DIARY_PAGES.length - 1}
+          >›</button>
+
+          <button className="diary-close-btn" onClick={onClose}>✕</button>
+
+          <div className="diary-page-label">{DIARY_PAGES[page].label} · {page + 1} / {DIARY_PAGES.length}</div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+const EMAILJS_TEMPLATE_ID = "template_h44q5s3";
+
 function GuestbookPopup({ onClose }) {
   const [name, setName]       = useState("");
   const [email, setEmail]     = useState("");
   const [note, setNote]       = useState("");
   const [sent, setSent]       = useState(false);
+  const [sending, setSending] = useState(false);
   const [notes, setNotes]     = useState([]);
   const [loading, setLoading] = useState(true);
 
-  /* load existing notes on mount */
   useEffect(() => {
     (async () => {
       try {
@@ -180,16 +250,37 @@ function GuestbookPopup({ onClose }) {
     })();
   }, []);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!name.trim() || !note.trim()) return;
+  async function handleSubmit() {
+    if (!name.trim() || !note.trim() || sending) return;
+    setSending(true);
+
+    // Send email via EmailJS
+    try {
+      await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          template_id: EMAILJS_TEMPLATE_ID,
+          template_params: {
+            from_name:  name.trim(),
+            from_email: email.trim() || "not provided",
+            message:    note.trim(),
+          },
+        }),
+      });
+    } catch (err) {
+      console.error("EmailJS error:", err);
+    }
+
+   
     const entry = { name: name.trim(), email: email.trim(), note: note.trim(), ts: Date.now() };
     const updated = [...notes, entry];
     try { await window.storage.set("guestbook-notes", JSON.stringify(updated), true); } catch {}
     setNotes(updated);
+    setSending(false);
     setSent(true);
     setName(""); setEmail(""); setNote("");
-    setTimeout(() => setSent(false), 3000);
+    setTimeout(() => setSent(false), 3500);
   }
 
   const NOTE_COLORS = ["#fef3a0","#ffd6e0","#d4f0c0","#dce8ff","#f3e5f5","#ffe0cc"];
@@ -198,25 +289,20 @@ function GuestbookPopup({ onClose }) {
   return (
     <div className="gb-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="gb-popup">
-
-        {/* tape strip at top */}
         <div className="gb-tape" />
-
-        {/* close */}
         <button className="gb-close" onClick={onClose}>✕</button>
 
-        {/* header */}
         <div className="gb-header">
           <p className="gb-eyebrow">LEAVE · A · NOTE</p>
           <h2 className="gb-title">Drop me a sticky note</h2>
           <p className="gb-subtitle">I'll find it on my desk by morning ✨</p>
         </div>
 
-        {/* form */}
-        <form className="gb-form" onSubmit={handleSubmit}>
+        
+        <div className="gb-form">
           <div className="gb-field">
             <label className="gb-label">YOUR NAME</label>
-            <input className="gb-input" value={name} onChange={e => setName(e.target.value)} maxLength={40} required />
+            <input className="gb-input" value={name} onChange={e => setName(e.target.value)} maxLength={40} />
           </div>
           <div className="gb-field">
             <label className="gb-label">YOUR EMAIL</label>
@@ -224,20 +310,22 @@ function GuestbookPopup({ onClose }) {
           </div>
           <div className="gb-field">
             <label className="gb-label">YOUR NOTE</label>
-            <textarea className="gb-textarea" value={note} onChange={e => setNote(e.target.value)} maxLength={200} required />
+            <textarea className="gb-textarea" value={note} onChange={e => setNote(e.target.value)} maxLength={200} />
           </div>
-          <button className="gb-submit" type="submit">
-            <span>✈</span> SEND NOTE
+          <button
+            className="gb-submit"
+            onClick={handleSubmit}
+            disabled={!name.trim() || !note.trim() || sending}
+          >
+            <span>{sending ? "..." : "✈"}</span> {sending ? "SENDING..." : "SEND NOTE"}
           </button>
           {sent && <p className="gb-success">Note pinned! ✦ Thank you for visiting~</p>}
-        </form>
+        </div>
 
-        {/* divider */}
         <div className="gb-divider">
           <span className="gb-divider-label">OR FIND ME AT</span>
         </div>
 
-        {/* socials */}
         <div className="gb-socials">
           {[
             { icon: "🐙", href: "https://github.com/niksxox" },
@@ -251,7 +339,6 @@ function GuestbookPopup({ onClose }) {
           ))}
         </div>
 
-        {/* existing notes wall */}
         {!loading && notes.length > 0 && (
           <div className="gb-notes-section">
             <p className="gb-notes-heading">✦ notes on my wall</p>
@@ -273,7 +360,6 @@ function GuestbookPopup({ onClose }) {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );
