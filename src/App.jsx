@@ -253,18 +253,19 @@ function GuestbookPopup({ onClose }) {
   async function handleSubmit() {
     if (!name.trim() || !note.trim() || sending) return;
     setSending(true);
-
-    // Send email via EmailJS
     try {
       await fetch("https://api.emailjs.com/api/v1.0/email/send", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
-          template_id: EMAILJS_TEMPLATE_ID,
+          service_id: "service_7qtpl62",
+          template_id: "template_h44q5s3",
           template_params: {
-            from_name:  name.trim(),
-            from_email: email.trim() || "not provided",
-            message:    note.trim(),
+            name: name.trim(),
+            email: email.trim() || "not provided",
+            message: note.trim(),
           },
         }),
       });
