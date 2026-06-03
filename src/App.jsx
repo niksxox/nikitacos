@@ -8,7 +8,6 @@ const DIALOGUE = [
   "Feel free to look around ✦",
 ];
 
-
 const STARS = Array.from({ length: 80 }, (_, i) => ({
   id: i,
   width:  `${Math.random() * 2.5 + 1}px`,
@@ -50,7 +49,6 @@ export default function App() {
   return (
     <main className="app-root">
 
-      
       {(screen === "loading" || screen === "intro") && (
         <div className="starfield" aria-hidden="true">
           {STARS.map(s => (
@@ -66,7 +64,6 @@ export default function App() {
         </div>
       )}
 
-      
       {screen === "loading" && (
         <section className="screen loading-screen">
           <div className="load-box">
@@ -118,7 +115,6 @@ export default function App() {
         </section>
       )}
 
-      
       {screen === "room" && (
         <section className="screen room-screen">
           <img className="room-bg" src="/room-bg.png" alt="cozy room" />
@@ -141,10 +137,8 @@ export default function App() {
         </section>
       )}
 
-      
       {showDesktop && <Desktop onClose={() => setShowDesktop(false)} />}
 
-      
       {showDiary && (
         <Diary
           initialTab={diaryTab}
@@ -152,7 +146,6 @@ export default function App() {
         />
       )}
 
-      
       {showGuest && <GuestbookPopup onClose={() => setShowGuest(false)} />}
 
     </main>
@@ -229,8 +222,6 @@ function Diary({ onClose }) {
   );
 }
 
-const EMAILJS_TEMPLATE_ID = "template_h44q5s3";
-
 function GuestbookPopup({ onClose }) {
   const [name, setName]       = useState("");
   const [email, setEmail]     = useState("");
@@ -253,27 +244,27 @@ function GuestbookPopup({ onClose }) {
   async function handleSubmit() {
     if (!name.trim() || !note.trim() || sending) return;
     setSending(true);
+
     try {
-      await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+      const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          service_id: "service_7qtpl62",
+          service_id:  "service_7qtpl62",
           template_id: "template_h44q5s3",
+          user_id:     "Lkcpu5rAHvdIMsSnf",
           template_params: {
-            name: name.trim(),
-            email: email.trim() || "not provided",
+            name:    name.trim(),
+            email:   email.trim() || "not provided",
             message: note.trim(),
           },
         }),
       });
+      if (!res.ok) console.error("EmailJS response:", res.status, await res.text());
     } catch (err) {
       console.error("EmailJS error:", err);
     }
 
-   
     const entry = { name: name.trim(), email: email.trim(), note: note.trim(), ts: Date.now() };
     const updated = [...notes, entry];
     try { await window.storage.set("guestbook-notes", JSON.stringify(updated), true); } catch {}
@@ -299,7 +290,6 @@ function GuestbookPopup({ onClose }) {
           <p className="gb-subtitle">I'll find it on my desk by morning ✨</p>
         </div>
 
-        
         <div className="gb-form">
           <div className="gb-field">
             <label className="gb-label">YOUR NAME</label>
