@@ -227,6 +227,7 @@ const PROJECTS = [
   { emoji:"📈", title:"Data Dashboard",               tech:["Java","Python","HTML"],           desc:"Interactive analytics dashboard with real data and charts.",                         link:"https://github.com/niksxox/data-dashboard" },
   { emoji:"🗂", title:"GitHub Intelligence Dashboard",tech:["MongoDB","Express","React","Node"],desc:"Full MERN stack platform — transforms GitHub repos into insights.",               link:"https://github.com/niksxox" },
   { emoji:"🤖", title:"Automation Project",           tech:["Python"],                         desc:"Utility scripts that automate repetitive workflows.",                                link:"https://github.com/niksxox/Automation_project" },
+  { emoji:"🛡️", title:"Security Log Analytics and Incident Response System using Elasticsearch and Kibana",           tech:["Python, Elasticsearch, Kibana"],                          desc:"Built a containerized Security Log Analytics and Incident Response System using Docker, Elasticsearch, and Kibana",                                link:"https://github.com/niksxox/raw-security-log-analytics" },
 ];
 
 function ProjectsContent() {
@@ -276,6 +277,8 @@ const SKILL_CATEGORIES = [
       { n: "Tailwind",    i: "💨" },
       { n: "NumPy",       i: "🔢" },
       { n: "Pandas",      i: "🐼" },
+      { n: "Swing GUI",  i: "🖥" },
+      { n: "Django",   i: "⛓️" },
     ],
   },
   {
@@ -283,6 +286,7 @@ const SKILL_CATEGORIES = [
     color: "#c9a96e",
     items: [
       { n: "MySQL", i: "🐬" },
+      { n: "Elasticsearch", i: "💢" },
     ],
   },
   {
@@ -293,6 +297,9 @@ const SKILL_CATEGORIES = [
       { n: "GitHub", i: "🐙" },
       { n: "Vercel", i: "▲"  },
       { n: "Render", i: "🚀" },
+      { n: "Docker", i: "🐳" },
+      { n: "VS Code", i: "📝" },
+      { n: "Kibana", i: "📊" },
     ],
   },
 ];
